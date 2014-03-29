@@ -3,7 +3,9 @@ class HookPlugin extends Yaf_Plugin_Abstract
 {
 	//'class'=>array('action'),
 	private $filter = array(
+			'index'=>array('index'=>false),
 			'welcome'=>array('index'=>false),
+			'chat'=>array('index'=>true),
 	);
 
 	function setRouteLock(Yaf_Request_Abstract $request)

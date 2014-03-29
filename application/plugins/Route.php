@@ -31,13 +31,17 @@ class RoutePlugin extends Yaf_Plugin_Abstract
 		$hook = new HookPlugin();
 		$request_rate = $hook->setRouteLock($request);
 		if(!$request_rate){
-			throw new Exception('request so fast');
+			throw new Yaf_Exception('',10000);
 		}
     }
 
     public function routerShutdown(Yaf_Request_Abstract $request, Yaf_Response_Abstract $response) 
     {
+    	try{
 
+    	}catch(Yaf_Exception $ye){
+    		var_dump($ye->getCode());
+    	}
     }
 }
 ?>
