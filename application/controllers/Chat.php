@@ -4,20 +4,35 @@ class ChatController extends Yaf_Controller_Abstract
 	public function indexAction()
 	{
 
-		$msg = $_GET['msg'];
-		$fp = stream_socket_client("tcp://127.0.0.1:9501", $errno, $errstr, 30);
-		if (!$fp) {
-		    exit("$errstr ($errno)<br />\n");
+		$client = new swoole_client(SWOOLE_TCP | SWOOLE_KEEP);
+		if(!$client->connect('127.0.0.1', 9501))
+		{
+			exit("connect failed\n");
 		}
-		fwrite($fp, "HELLO world");
+		$client->send(str_repeat("A", 600));
+		$data = $client->recv(7000, 0);
+		if($data === false)
+		{
+			echo "recv fail\n";
+			break;
+		}
+		var_dump($data);
 
-		swoole_event_add($fp, function($fp){
-			echo fgets($fp, 1024);
-			swoole_event_del($fp);
-		    fclose($fp);
-		});
 
-		echo "start\n";
+		$client2 = new swoole_client(SWOOLE_TCP | SWOOLE_KEEP);
+		if(!$client2->connect('127.0.0.1', 9501))
+		{
+			exit("connect failed\n");
+		}
+		$client2->send(str_repeat("B", 600));
+		$data = $client2->recv(7000, 0);
+		if($data === false)
+		{
+			echo "recv fail\n";
+			break;
+		}
+		var_dump($data);
+
 	}
 }
 
